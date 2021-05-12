@@ -1,0 +1,90 @@
+// Using Quick Select 
+
+class Solution {
+public:
+    
+    int getDistance(int x , int y){
+        
+        return x * x + y * y ; 
+    }
+    
+    
+    
+    void KClosestPointsFromOrigin(vector<pair<int , int>> &pointsDistanceFromOrigin , int start , int end , int k){
+        
+        
+        int low = start;
+        int  high = start;
+        
+        int pivot = pointsDistanceFromOrigin[end].first;
+        
+        while(high < end){
+            
+            if(pointsDistanceFromOrigin[high].first <= pivot){
+                swap(pointsDistanceFromOrigin[low] , pointsDistanceFromOrigin[high]);
+                ++low;
+                ++high;
+            }
+            else{
+                 ++high;
+            }
+            
+            
+        }
+        
+        swap(pointsDistanceFromOrigin[low] , pointsDistanceFromOrigin[end]);
+        
+        if(low == (k-1))return ; 
+        
+        else if(low < (k-1)){
+            KClosestPointsFromOrigin(pointsDistanceFromOrigin , low+1 , end , k);
+            
+        }
+        else{
+             KClosestPointsFromOrigin(pointsDistanceFromOrigin , start , low-1 , k);
+
+        }
+    }
+    
+    
+    
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k){
+        
+        vector<pair<int , int>> pointsDistanceFromOrigin ; // distance , index 
+        
+        int index = 0;
+        
+        for(auto point : points){
+            
+            int x = points[index][0];
+            int y = points[index][1];
+            
+            int dis = getDistance( x , y);
+            
+            pointsDistanceFromOrigin.push_back({dis , index});
+            ++index;
+            
+        }
+        
+        int low  = 0 ;
+        int high = points.size()-1;
+        
+        
+        KClosestPointsFromOrigin(pointsDistanceFromOrigin , low , high , k);
+        
+        vector<vector<int>>requiredPoints ; 
+        
+        for(int i=0; i<k; i++){
+            
+            int index = pointsDistanceFromOrigin[i].second;
+            int x = points[index][0];
+            int y = points[index][1];
+            
+            
+            requiredPoints.push_back({x , y});
+        }
+        
+        
+        return requiredPoints ;
+    }
+};
